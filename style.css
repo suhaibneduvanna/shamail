@@ -15,6 +15,14 @@ body {
     /* background: linear-gradient(135deg, #71b7e6, #9b59b6); */
 }
 
+hr{
+    border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #333; /* old IE */
+    background-color: #333; /* Modern Browsers */
+
+}
 .container {
     /* max-width: 700px; */
     width: 100%;

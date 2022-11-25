@@ -12,16 +12,17 @@
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css">
-    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="fav.png">
+    <title>Shamail Registration</title>
 </head>
 
 <body>
     <div class="row">
-        <div class="container">
-            <div class="title">Registration</div>
-            <div class="content">
+        <div class="container ">
+            <div class="title ">Shamail Meet Up Registration</div>
+            <div class="content pt-3">
                 <form id="reg_form">
-                    
+
                     <div class="user-details row">
 
                         <div class="input-box col-lg-6">
@@ -29,7 +30,7 @@
                             <input id="name" type="text" placeholder="Full name" required>
                         </div>
 
-                        <div class="input-box col-lg-6" >
+                        <div class="input-box col-lg-6">
                             <span class="details">Phone</span>
                             <input id="phone" type="text" placeholder="Phone number" required>
                         </div>
@@ -46,34 +47,36 @@
 
                     </div>
 
-                    <div class="button">
-                        <input type="submit" value="Register">
+                    <div class="d-flex justify-content-center">
+                        <input class="btn btn-primary" type="submit" value="Register">
                     </div>
                 </form>
+                <br>
+                <hr >
+                <br>
+                <table id="example" class="table responsive" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Place</th>
+                            <th>No of persons</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+    
+                    </tbody>
+    
+                </table>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="container">
-            <table id="example" class="table display nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Place</th>
-                        <th>No of persons</th>
-                        <th>Delete</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-
-
-                </tbody>
-
-            </table>
+            
         </div>
     </div>
 
@@ -116,7 +119,24 @@
             "pageLength": 10,
             dom: 'Bfrtip',
             buttons: [
-                'excel', 'pdf', 'print'
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
             ],
 
         });
@@ -146,7 +166,7 @@
                         change.doc.data().mobile,
                         change.doc.data().place,
                         change.doc.data().totalPersons,
-                        `<input onclick="deleteReg('${change.doc.id}')" type="button" id="${change.doc.id}" value="Delete">`
+                        `<input class='btn btn-danger' onclick="deleteReg('${change.doc.id}')" type="button" id="${change.doc.id}" value="Delete">`
                     ]).node().id = change.doc.id;
                     table.draw(false);
 
