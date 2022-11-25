@@ -52,7 +52,7 @@
                     </div>
                 </form>
                 <br>
-                <hr >
+                <hr>
                 <br>
                 <table id="example" class="table responsive" style="width:100%">
                     <thead>
@@ -65,16 +65,16 @@
                         </tr>
                     </thead>
                     <tbody>
-    
-    
+
+
                     </tbody>
-    
+
                 </table>
             </div>
         </div>
     </div>
 
- 
+
     <div id="cover-spin"></div>
 
 </body>
@@ -199,7 +199,7 @@
             totalPersons: totalPersons
         }).then((value) => {
             $('#cover-spin').hide(0)
-            alert('Document successfully written!')
+            alert('Participant successfully added!')
             console.log("Document successfully written!");
         }).catch((error) => {
             console.error("Error writing document: ", error);
@@ -209,9 +209,11 @@
 
     async function deleteReg(id) {
         let db = await firebase.firestore();
-
+        $('#cover-spin').show(0)
         db.collection("reg_form").doc(id).delete().then(() => {
-            console.log("Document successfully deleted!");
+            $('#cover-spin').hide(0)
+            alert('Participant successfully deleted!')
+            console.log("Participant successfully deleted!");
         }).catch((error) => {
             console.error("Error removing document: ", error);
         });
