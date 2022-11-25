@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="container">
+            <div class="title">Registration</div>
+            <div class="content">
+                <form id="reg_form">
+                    
+                    <div class="user-details row">
+
+                        <div class="input-box col-lg-6">
+                            <span class="details">Full Name</span>
+                            <input id="name" type="text" placeholder="Full name" required>
+                        </div>
+
+                        <div class="input-box col-lg-6" >
+                            <span class="details">Phone</span>
+                            <input id="phone" type="text" placeholder="Phone number" required>
+                        </div>
+
+                        <div class="input-box col-lg-6">
+                            <span class="details">Place</span>
+                            <input id="place" type="text" placeholder="Place" required>
+                        </div>
+
+                        <div class="input-box col-lg-6">
+                            <span class="details">No of persons</span>
+                            <input id="totalPersons" type="number" placeholder="Number of persons" required>
+                        </div>
+
+                    </div>
+
+                    <div class="button">
+                        <input type="submit" value="Register">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+            <table id="example" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Place</th>
+                        <th>No of persons</th>
+                        <th>Delete</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table;
+
+        $('#example').DataTable({
+            "pageLength": 10,
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
+
+        });
+
+        table = $('#example').DataTable();
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCsMwgVnjl-4T9pcRvtytUtPY-jOuxBtUQ",
+            authDomain: "shamail-67458.firebaseapp.com",
+            projectId: "shamail-67458",
+            storageBucket: "shamail-67458.appspot.com",
+            messagingSenderId: "621348221938",
+            appId: "1:621348221938:web:e44242c7332ae662b9716b"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        let db = firebase.firestore();
+        var participant = [];
+
+        db.collection("reg_form").onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    console.log("New city: ", change.doc.data());
+                    table.row.add([
+                        change.doc.data().name,
+                        change.doc.data().mobile,
+                        change.doc.data().place,
+                        change.doc.data().totalPersons,
+                        `<input onclick="deleteReg('${change.doc.id}')" type="button" id="${change.doc.id}" value="Delete">`
+                    ]).node().id = change.doc.id;
+                    table.draw(false);
+
+                }
+                if (change.type === "modified") {
+                    console.log("Modified city: ", change.doc.data());
+                }
+                if (change.type === "removed") {
+                    console.log("Removed city: ", change.doc.data());
+                    table.row("#" + change.doc.id).remove().draw();
+
+                }
+            });
+        });
+
+
+
+
+    });
+
+    $("#reg_form").submit(async function (e) {
+        e.preventDefault();
+        var name = document.getElementById('name').value
+        var phone = document.getElementById('phone').value
+        var place = document.getElementById('place').value
+        var totalPersons = document.getElementById('totalPersons').value
+
+        let db = await firebase.firestore();
+        db.collection("reg_form").doc().set({
+            name: name,
+            place: place,
+            mobile: phone,
+            totalPersons: totalPersons
+        }).then((value) => {
+            console.log("Document successfully written!");
+        }).catch((error) => {
+            console.error("Error writing document: ", error);
+        });
+
+    });
+
+    async function deleteReg(id) {
+        let db = await firebase.firestore();
+
+        db.collection("reg_form").doc(id).delete().then(() => {
+            console.log("Document successfully deleted!");
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+    }
+
+    // Import the functions you need from the SDKs you need
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+</script>
+
+</html>
